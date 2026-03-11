@@ -1,28 +1,34 @@
 import java.util.Scanner;
 
 public class Databaze {
-	public Databaze(int pocetPrvku)
-	{
-		prvkyDatabaze=new Student[pocetPrvku];
-		sc=new Scanner(System.in);
+	public Databaze(int pocetPrvku) {
+		if (pocetPrvku <= 0) {
+			throw new IllegalArgumentException("Kapacita databáze musí být větší než nula.");
+		}
+		this.prvkyDatabaze = new Student[pocetPrvku];
+		this.posledniStudent = 0;
 	}
-	
-	public void setStudent()
-	{
-		System.out.println("Zadejte jmeno studenta, rok narozeni");
-		String jmeno=sc.next();
-		int rok=sc.nextInt();
-		prvkyDatabaze[posledniStudent++]=new Student(jmeno,rok);
+
+	public void addStudent(String jmeno, int rok) {
+		if (posledniStudent >= prvkyDatabaze.length) {
+			throw new ArrayIndexOutOfBoundsException("Kapacita databáze byla překročena. Nelze přidat dalšího studenta.");
+		}
+		prvkyDatabaze[posledniStudent++] = new Student(jmeno, rok);
 	}
-	
-	public Student getStudent(int idx)
-	{
+
+	public Student getStudent(int idx) {
+		if (idx < 0 || idx >= prvkyDatabaze.length) {
+			throw new ArrayIndexOutOfBoundsException("Zadali jste index (" + idx + ") mimo rozsah databáze.");
+		}
+		if (prvkyDatabaze[idx] == null) {
+			throw new NullPointerException("Na indexu " + idx + " se nenachází žádný záznam o studentovi.");
+		}
 		return prvkyDatabaze[idx];
 	}
-	
-	public void setPrumer(int idx, float prumer)
-	{
-		prvkyDatabaze[idx].setStudijniPrumer(prumer);
+
+	public void setPrumer(int idx, float prumer) throws NeplatnyPrumerException {
+		Student s = getStudent(idx);
+		s.setStudijniPrumer(prumer);
 	}
 	
 	private Scanner sc;
