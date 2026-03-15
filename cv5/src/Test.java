@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -15,11 +16,15 @@ public class Test {
 			System.out.println("2 .. vlozeni noveho studenta");
 			System.out.println("3 .. nastaveni prumeru studenta");
 			System.out.println("4 .. vypis informace o studentovi");
-			System.out.println("5 .. ukonceni aplikace");
+			System.out.println("5 .. vypis cele databaze");
+			System.out.println("6 .. ulozeni do souboru");
+			System.out.println("7 .. nacteni ze souboru");
+			System.out.println("8 .. ukonceni aplikace");
 			System.out.print("Vaše volba: ");
 
 			try {
 				int volba = sc.nextInt();
+				sc.nextLine();
 
 				switch(volba) {
 					case 1:
@@ -67,12 +72,30 @@ public class Test {
 						break;
 
 					case 5:
+						mojeDatabaze.printDatabase();
+						break;
+
+					case 6:
+						System.out.print("Zadejte název souboru pro uložení (např. data.txt): ");
+						String souborUloz = sc.nextLine();
+						mojeDatabaze.saveToFile(souborUloz);
+						System.out.println("[INFO] Databáze byla úspěšně uložena do souboru " + souborUloz);
+						break;
+
+					case 7:
+						System.out.print("Zadejte název souboru pro načtení (např. data.txt): ");
+						String souborNacti = sc.nextLine();
+						mojeDatabaze.loadFromFile(souborNacti);
+						System.out.println("[INFO] Databáze byla úspěšně načtena ze souboru " + souborNacti);
+						break;
+
+					case 8:
 						System.out.println("Aplikace bude ukončena. Na shledanou!");
 						run = false;
 						break;
 
 					default:
-						System.out.println("[VAROVÁNÍ] Neznámá volba. Prosím, zadejte číslo v rozsahu 1-5.");
+						System.out.println("[VAROVÁNÍ] Neznámá volba. Prosím, zadejte číslo v rozsahu 1-8.");
 						break;
 				}
 
@@ -91,6 +114,9 @@ public class Test {
 
 			} catch (IllegalArgumentException e) {
 				System.err.println("[CHYBA ZADÁNÍ] " + e.getMessage());
+
+			} catch (IOException e) {
+				System.err.println("[CHYBA SOUBORU] Vyskytl se problém při práci se souborem: " + e.getMessage());
 
 			} catch (Exception e) {
 				System.err.println("[NEOČEKÁVANÁ CHYBA] Došlo k systémové chybě: " + e.getMessage());
